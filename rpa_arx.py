@@ -54,41 +54,7 @@ def obtener_texto(driver, xpath, t =5):
     return elemento
 
 
-def enviar_correo(html, destinatario, asunto, pdf_lpn, fecha, nombre_seller):
-    
-    msgText = MIMEText( html , 'html')
-    
-    mensaje = MIMEMultipart()
-    mensaje["From"] = 'eaariash@falabella.com'
-    mensaje["To"] = destinatario
-    mensaje["Subject"]= asunto
-    
-    mensaje.attach(msgText)
-    # filename = "lpn-" +  str(fecha) + '.pdf'
-    
-    # pdf = MIMEApplication(open(pdf_lpn, 'rb').read())
-    # pdf.add_header('Content-Disposition', 'attachment', filename= filename)
-    # mensaje.attach(pdf)
-    
-    smtp = SMTP("smtp.office365.com", 587)
-    smtp.ehlo()
-    smtp.starttls()
-    smtp.login('eaariash@falabella.com', "F@l@bell@2021")
-    smtp.send_message(mensaje)
-    smtp.quit()
-
 def limpiar_input(driver, xpath, t=5):
     WebDriverWait(driver, t)\
-                .until(EC.element_to_be_clickable((By.XPATH,
-                                               xpath))).clear()
+                .until(EC.element_to_be_clickable((By.XPATH, xpath))).clear()
             
-def teclear_enter(driver, xpath, t=5):
-    WebDriverWait(driver, t)\
-                .until(EC.element_to_be_clickable((By.XPATH, 
-                                    xpath))).send_keys("webdriver" + Keys.RETURN)
-                
-def scroll_abajo(driver, xpath, movimientos = 2, t = 5):
-    for i in range(0,movimientos):
-        WebDriverWait(driver, t)\
-            .until(EC.element_to_be_clickable((By.XPATH, xpath))).send_keys("webdriver" + Keys.DOWN)
-                    

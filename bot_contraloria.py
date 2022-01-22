@@ -7,31 +7,50 @@ Created on Sat Jan 15 10:32:40 2022
 """
 
 import rpa_arx as r
-from selenium import webdriver
+# from selenium import webdriver
 import mysql.connector
 import pandas as pd
 import time as t
 
 
 PATH_DESCARGAS = r"/descargas"
-WEB_DRIVER = r'./chromedriver'
 
 
-options = webdriver.chrome.options.Options()
+# WEB_DRIVER = r'./chromedriver'
+
+# options = webdriver.chrome.options.Options()
+# options.use_chromium = True
+# options.binary_location = r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# options.add_experimental_option("prefs", {
+#   "download.default_directory": PATH_DESCARGAS,
+#   "download.prompt_for_download": False,
+#   "download.directory_upgrade": True,
+#   "safebrowsing.enabled": True,
+#   "profile.default_content_setting_values.automatic_downloads": 1,
+# })
+
+
+# # driver = Edge(executable_path = r'./msedgedriver', options=options)
+# driver  = webdriver.Chrome(executable_path=WEB_DRIVER, options = options)
+
+
+
+from msedge.selenium_tools import Edge, EdgeOptions
+
+DRIVER = 'msedgedriver.exe'
+
+
+options = EdgeOptions()
 options.use_chromium = True
-options.binary_location = r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 options.add_experimental_option("prefs", {
-  "download.default_directory": PATH_DESCARGAS,
+  "download.default_directory": r'/Users/eaariash/ingenieria/BOT-SVL/etiquetas_descargadas/',
   "download.prompt_for_download": False,
   "download.directory_upgrade": True,
   "safebrowsing.enabled": True,
   "profile.default_content_setting_values.automatic_downloads": 1,
 })
+driver = Edge(executable_path = 'msedgedriver.exe', options=options)
 
-
-
-# driver = Edge(executable_path = r'./msedgedriver', options=options)
-driver  = webdriver.Chrome(executable_path=WEB_DRIVER, options = options)
 
 
 cnxn = mysql.connector.connect( host='localhost', 
@@ -45,7 +64,8 @@ select CodPip from dsrp.tabla_pip tp
 
 df_pip = pd.read_sql(query,cnxn)
 
-df_pip_example = df_pip[439:1000]
+df_pip_example = df_pip[1000:30000]
+
 
 
 url = "https://ofi5.mef.gob.pe/invierte/formato/verInversion/"
@@ -115,8 +135,11 @@ for cod in df_pip_example["CodPip"]:
     finish_time = t.time()
     print(finish_time - star_time)
     
-df_uf.to_excel("descargas/tabla_unidad_formuladora_5.xlsx")
-df_ue.to_excel("descargas/tabla_unidad_ejecutora_5.xlsx")
+ahora = str(int(t.time()))
+name_uf = f'/tabla_unidad_formuladora_{ahora}.xlsx'
+name_ue = f'/tabla_unidad_ejecutora_{ahora}.xlsx'
+df_uf.to_excel("descargas" + name_uf)
+df_ue.to_excel("descargas" + name_ue)
 
 
 
